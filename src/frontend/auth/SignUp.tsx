@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
+import { makeRequests } from "../../util/makeRequests";
 function SignUp() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmbasswordVisible] = useState(false);
@@ -21,12 +22,37 @@ function SignUp() {
     // alert("HEy")
     setConfirmbasswordVisible(!confirmPasswordVisible);
   };
-  const doSignUp = () => {
-    console.log("Email:", email);
-    console.log("Username:", username);
-    console.log("Password:", password);
-    console.log("Confirm Password:", confirmPassword);
-
+  const doSignUp = async () => {
+    // console.log("Email:", email);
+    // console.log("Username:", username);
+    // console.log("Password:", password);
+    // console.log("Confirm Password:", confirmPassword);
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("confirmPassword", confirmPassword);
+    const myData = JSON.stringify({ username: "rag" });
+    const response = await makeRequests(
+      "POST",
+      "http://localhost/react_native_backend/receive2.php",
+      myData,
+      "text",
+      "application/json"
+    );
+    console.log(response);
+    return;
+    const url = "http://localhost/react_native_backend/receive2.php";
+    const response2 = await fetch(url, {
+      method: "POST",
+      body: myData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const text = await response2.text();
+    console.log("res is ", text);
+    return;
     if (!validate(username, "username")) {
       setErrorMessage("Invalid username only numbers and texts are allowed");
       setInputErrorState(true);
@@ -56,7 +82,7 @@ function SignUp() {
   }, [passwordVisible]);
   return (
     <>
-      <div className="flex flex-col items-center justify-center bg-grey-lighter">
+      <div className="flex flex-col items-center justify-center pt-10 bg-grey-lighter">
         <div className="container flex flex-col items-center justify-center flex-1 max-w-md px-2 mx-auto">
           <div className="w-full px-6 py-8 text-black bg-white rounded shadow-md">
             <div className="flex justify-center w-full ">
@@ -67,7 +93,7 @@ function SignUp() {
             {inputErrorState ? (
               <div
                 id="errorDivContainer"
-                className=" p-1 mb-3 border-2 border-red-400"
+                className="p-1 mb-3 border-2 border-red-400 "
               >
                 <div className="flex items-center justify-center text-3xl text-center ">
                   <span id="errorBox" className="p-3 text-sm text-red-500 ">
