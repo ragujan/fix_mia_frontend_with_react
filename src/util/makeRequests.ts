@@ -2,7 +2,7 @@ async function makeRequests(
     method: 'GET' | 'POST',
     url: string,
     data: string | FormData,
-    responseType: 'json' | 'text',
+    responseType: 'json' | 'text' | 'html',
     contentType: string
 ) {
 
@@ -12,9 +12,13 @@ async function makeRequests(
         body: string | FormData
     }
 
+    
+
     const requestHeaders: HeadersInit = new Headers();
     requestHeaders.set('Content-Type', contentType);
-    requestHeaders.set('Accept',responseType === 'json'?'application/json':'text/plain')
+    requestHeaders.set('Accept',responseType === 'json'?'application/json':(responseType==='text'?'text/plain':'text/html'))
+
+    
     try {
         const requestOptions: requestOptionsType = {
             method,

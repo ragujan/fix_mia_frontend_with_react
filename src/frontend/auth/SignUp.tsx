@@ -32,50 +32,41 @@ function SignUp() {
     formData.append("email", email);
     formData.append("password", password);
     formData.append("confirmPassword", confirmPassword);
-    const myData = JSON.stringify({ username: "rag" });
-    const response = await makeRequests(
-      "POST",
-      "http://localhost/react_native_backend/receive2.php",
-      myData,
-      "text",
-      "application/json"
-    );
-    console.log(response);
-    return;
-    const url = "http://localhost/react_native_backend/receive2.php";
-    const response2 = await fetch(url, {
-      method: "POST",
-      body: myData,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const text = await response2.text();
-    console.log("res is ", text);
-    return;
-    if (!validate(username, "username")) {
-      setErrorMessage("Invalid username only numbers and texts are allowed");
-      setInputErrorState(true);
-      return;
-    }
-    if (!validate(email, "email")) {
-      setErrorMessage("Invalid email");
-      setInputErrorState(true);
-      return;
-    }
-    if (!validate(password, "password")) {
-      setErrorMessage(
-        "Password length minimum 8, atleast a number, special character, upper case, lower case"
-      );
-      setInputErrorState(true);
-      return;
-    }
+
+    // return;
+    // if (!validate(username, "username")) {
+    //   setErrorMessage("Invalid username only numbers and texts are allowed");
+    //   setInputErrorState(true);
+    //   return;
+    // }
+    // if (!validate(email, "email")) {
+    //   setErrorMessage("Invalid email");
+    //   setInputErrorState(true);
+    //   return;
+    // }
+    // if (!validate(password, "password")) {
+    //   setErrorMessage(
+    //     "Password length minimum 8, atleast a number, special character, upper case, lower case"
+    //   );
+    //   setInputErrorState(true);
+    //   return;
+    // }
     if (password != confirmPassword) {
       setErrorMessage("Passwords don't match");
       setInputErrorState(true);
       return;
     }
     setInputErrorState(false);
+    const myData = JSON.stringify({ username: "rag", email: "rag222@gmail.com",password:"rag##22Rag",confirmPassword:"rag##22Rag" });
+    const url = "http://localhost:8080/fix_mia_app_war_exploded/signupuser";
+    const response = await makeRequests(
+      "POST",
+      url,
+      myData,
+      "text",
+      "application/json"
+    );
+    console.log(response);
   };
   useEffect(() => {
     console.log("Password visibility status ", passwordVisible);
