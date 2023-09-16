@@ -13,13 +13,12 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const userRegisterSuccessMessage = "Non-Exception:User added successfully";
+  const serverResponseMessageTypeStartsWith = "Non-Exception:";
   const showPassword = () => {
-    // alert("HEy")
     setPasswordVisible(!passwordVisible);
   };
   const showConfirmPassword = () => {
-    // alert("HEy")
     setConfirmbasswordVisible(!confirmPasswordVisible);
   };
   const doSignUp = async () => {
@@ -33,31 +32,35 @@ function SignUp() {
     formData.append("password", password);
     formData.append("confirmPassword", confirmPassword);
 
-    // return;
-    // if (!validate(username, "username")) {
-    //   setErrorMessage("Invalid username only numbers and texts are allowed");
-    //   setInputErrorState(true);
-    //   return;
-    // }
-    // if (!validate(email, "email")) {
-    //   setErrorMessage("Invalid email");
-    //   setInputErrorState(true);
-    //   return;
-    // }
-    // if (!validate(password, "password")) {
-    //   setErrorMessage(
-    //     "Password length minimum 8, atleast a number, special character, upper case, lower case"
-    //   );
-    //   setInputErrorState(true);
-    //   return;
-    // }
+    if (!validate(username, "username")) {
+      setErrorMessage("Invalid username only numbers and texts are allowed");
+      setInputErrorState(true);
+      return;
+    }
+    if (!validate(email, "email")) {
+      setErrorMessage("Invalid email");
+      setInputErrorState(true);
+      return;
+    }
+    if (!validate(password, "password")) {
+      setErrorMessage(
+        "Password length minimum 8, atleast a number, special character, upper case, lower case"
+      );
+      setInputErrorState(true);
+      return;
+    }
     if (password != confirmPassword) {
       setErrorMessage("Passwords don't match");
       setInputErrorState(true);
       return;
     }
     setInputErrorState(false);
-    const myData = JSON.stringify({ username: "rag", email: "rag222@gmail.com",password:"rag##22Rag",confirmPassword:"rag##22Rag" });
+    const myData = JSON.stringify({
+      username: username,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+    });
     const url = "http://localhost:8080/fix_mia_app_war_exploded/signupuser";
     const response = await makeRequests(
       "POST",
@@ -66,7 +69,19 @@ function SignUp() {
       "text",
       "application/json"
     );
-    console.log(response);
+    if (
+      response.toLocaleLowerCase ===
+      userRegisterSuccessMessage.toLocaleLowerCase()
+    ) {
+      console.log(userRegisterSuccessMessage.toLocaleLowerCase())
+    } else {
+      console.log(response);
+      if (response.includes(serverResponseMessageTypeStartsWith)) {
+        const errMsg = response.replaceAll(serverResponseMessageTypeStartsWith,"");
+        setInputErrorState(true);
+        setErrorMessage(errMsg);
+      }
+    }
   };
   useEffect(() => {
     console.log("Password visibility status ", passwordVisible);
