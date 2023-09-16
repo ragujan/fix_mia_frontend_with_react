@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
+import {Link} from "react-router-dom";
 function SignUp() {
+  
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmbasswordVisible] = useState(false);
 
@@ -13,6 +16,8 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+
   const userRegisterSuccessMessage = "Non-Exception:User added successfully";
   const serverResponseMessageTypeStartsWith = "Non-Exception:";
   const showPassword = () => {
@@ -70,7 +75,7 @@ function SignUp() {
       "application/json"
     );
     if (
-      response.toLocaleLowerCase ===
+      response.toLocaleLowerCase() ===
       userRegisterSuccessMessage.toLocaleLowerCase()
     ) {
       console.log(userRegisterSuccessMessage.toLocaleLowerCase())
@@ -83,6 +88,8 @@ function SignUp() {
       }
     }
   };
+
+
   useEffect(() => {
     console.log("Password visibility status ", passwordVisible);
   }, [passwordVisible]);
@@ -193,36 +200,16 @@ function SignUp() {
             >
               Create Account
             </button>
-            {/* <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
-
-                    <div id="g_id_onload"
-                        data-client_id="337084451495-b1tda8u3401dmtqcpcfsrlgprnrs0op8.apps.googleusercontent.com"
-                        data-context="signup" data-ux_mode="redirect"
-                        data-login_uri="http://localhost:8080/fix_mia_app_war_exploded/signupgooglehome"
-                        data-callback="signup_google" data-nonce="" data-itp_support="true">
-                    </div>
-
-                    <div className="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
-                        data-text="signup_with" data-size="large" data-locale="en-US" data-logo_alignment="left">
-                    </div>
-                </div> */}
-
+            <div className="mt-4 text-sm text-center text-grey-dark">
+              <Link className="text-blue-700 underline cursor-pointer" to={"/login"}>Login</Link>
+            </div>
             <div className="mt-4 text-sm text-center text-grey-dark">
               By signing up, you agree to the Terms of Service and Privacy
               Policy
             </div>
           </div>
 
-          <div className="mt-3 text-grey-dark">
-            Already have an account?
-            <a
-              className="no-underline border-b border-blue-50 text-blue"
-              href="../login/"
-            >
-              Log in
-            </a>
-            .
-          </div>
+        
         </div>
       </div>
     </>

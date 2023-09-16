@@ -3,25 +3,24 @@ import { useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
+import { Link } from "react-router-dom";
 function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("rag@gmail.com");
+  const [password, setPassword] = useState("123Rag###rag");
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const userRegisterSuccessMessage = "Non-Exception:User added successfully";
+  const userRegisterSuccessMessage = "Non-Exception:User is there";
   const serverResponseMessageTypeStartsWith = "Non-Exception:";
   const showPassword = () => {
     setPasswordVisible(!passwordVisible);
   };
 
   const doLogin = async () => {
-
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
-
 
     if (!validate(email, "email")) {
       setErrorMessage("Invalid email");
@@ -41,7 +40,7 @@ function Login() {
       email: email,
       password: password,
     });
-    const url = "http://localhost:8080/fix_mia_app_war_exploded/signupuser";
+    const url = "http://localhost:8080/fix_mia_app_war_exploded/loginuser";
     const response = await makeRequests(
       "POST",
       url,
@@ -50,14 +49,20 @@ function Login() {
       "application/json"
     );
     if (
-      response.toLocaleLowerCase ===
+      response.toLocaleLowerCase() ===
       userRegisterSuccessMessage.toLocaleLowerCase()
     ) {
-      console.log(userRegisterSuccessMessage.toLocaleLowerCase())
+      setInputErrorState(false);
+      console.log("Success")
+      console.log(userRegisterSuccessMessage.toLocaleLowerCase());
     } else {
       console.log(response);
+      console.log("bad")
       if (response.includes(serverResponseMessageTypeStartsWith)) {
-        const errMsg = response.replaceAll(serverResponseMessageTypeStartsWith,"");
+        const errMsg = response.replaceAll(
+          serverResponseMessageTypeStartsWith,
+          ""
+        );
         setInputErrorState(true);
         setErrorMessage(errMsg);
       }
@@ -88,7 +93,6 @@ function Login() {
             ) : (
               <></>
             )}
-      
 
             <input
               id="email"
@@ -128,14 +132,13 @@ function Login() {
               />
             </div>
 
-        
             <button
               className="w-full py-3 my-1 text-center text-white rounded bg-maintheme hover:bg-green-dark focus:outline-none"
               onClick={() => {
                 doLogin();
               }}
             >
-              Create Account
+              Login
             </button>
             {/* <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
 
@@ -150,23 +153,21 @@ function Login() {
                         data-text="signup_with" data-size="large" data-locale="en-US" data-logo_alignment="left">
                     </div>
                 </div> */}
-
+            <div className="mt-4 text-sm text-center text-grey-dark">
+              <Link
+                className="text-blue-700 underline cursor-pointer"
+                to={"/signup"}
+              >
+                SignUp
+              </Link>
+            </div>
             <div className="mt-4 text-sm text-center text-grey-dark">
               By signing up, you agree to the Terms of Service and Privacy
               Policy
             </div>
           </div>
 
-          <div className="mt-3 text-grey-dark">
-            Already have an account?
-            <a
-              className="no-underline border-b border-blue-50 text-blue"
-              href="../login/"
-            >
-              Log in
-            </a>
-            .
-          </div>
+     
         </div>
       </div>
     </>
