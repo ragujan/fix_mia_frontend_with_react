@@ -1,12 +1,13 @@
 // import React from 'react'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
 import { Link } from "react-router-dom";
 function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
-
+  const [googleId, setGoogleId] = useState("");
+  // const google_client_id = process.env.GOOGLE_CLIENT_ID;
   const [email, setEmail] = useState("rag@gmail.com");
   const [password, setPassword] = useState("123Rag###rag");
   const [inputErrorState, setInputErrorState] = useState(false);
@@ -17,6 +18,28 @@ function Login() {
     setPasswordVisible(!passwordVisible);
   };
 
+  useEffect(() => {
+    const setGoogleIdFunc = async () => {
+      const id = await requestGoogleId();
+      console.log(typeof id === "string");
+      setGoogleId(id);
+      console.log("google ", googleId)
+      console.log("google id not there man");
+    };
+
+    // Call the function directly when the component mounts
+    setGoogleIdFunc();
+  }, [googleId]);
+
+  const requestGoogleId: () => Promise<string> = async () => {
+    const url = "http://localhost:8080/fix_mia_app_war_exploded/googleapi";
+    const response = await makeRequests("GET", url, "", "text", "text/plain");
+    if (typeof response === "string") {
+      return response;
+    } else {
+      return "";
+    }
+  };
   const doLogin = async () => {
     const formData = new FormData();
     formData.append("email", email);
@@ -48,23 +71,25 @@ function Login() {
       "text",
       "application/json"
     );
-    if (
-      response.toLocaleLowerCase() ===
-      userRegisterSuccessMessage.toLocaleLowerCase()
-    ) {
-      setInputErrorState(false);
-      console.log("Success")
-      console.log(userRegisterSuccessMessage.toLocaleLowerCase());
-    } else {
-      console.log(response);
-      console.log("bad")
-      if (response.includes(serverResponseMessageTypeStartsWith)) {
-        const errMsg = response.replaceAll(
-          serverResponseMessageTypeStartsWith,
-          ""
-        );
-        setInputErrorState(true);
-        setErrorMessage(errMsg);
+    if (typeof response === "string") {
+      if (
+        response.toLocaleLowerCase() ===
+        userRegisterSuccessMessage.toLocaleLowerCase()
+      ) {
+        setInputErrorState(false);
+        console.log("Success");
+        console.log(userRegisterSuccessMessage.toLocaleLowerCase());
+      } else {
+        console.log(response);
+        console.log("bad");
+        if (response.includes(serverResponseMessageTypeStartsWith)) {
+          const errMsg = response.replaceAll(
+            serverResponseMessageTypeStartsWith,
+            ""
+          );
+          setInputErrorState(true);
+          setErrorMessage(errMsg);
+        }
       }
     }
   };
@@ -77,7 +102,7 @@ function Login() {
             <div className="flex justify-center w-full ">
               <img className="w-10 h-10" src={logoImage} alt="" />
             </div>
-            <h1 className="mb-4 text-3xl font-semibold text-center">Sign up</h1>
+            <h1 className="mb-4 text-3xl font-semibold text-center">Login</h1>
             {/* error message div */}
             {inputErrorState ? (
               <div
@@ -166,8 +191,6 @@ function Login() {
               Policy
             </div>
           </div>
-
-     
         </div>
       </div>
     </>

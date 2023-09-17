@@ -3,12 +3,10 @@ import { useEffect, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 function SignUp() {
-  
-
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmbasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -17,14 +15,13 @@ function SignUp() {
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-
   const userRegisterSuccessMessage = "Non-Exception:User added successfully";
   const serverResponseMessageTypeStartsWith = "Non-Exception:";
   const showPassword = () => {
     setPasswordVisible(!passwordVisible);
   };
   const showConfirmPassword = () => {
-    setConfirmbasswordVisible(!confirmPasswordVisible);
+    setConfirmPasswordVisible(!confirmPasswordVisible);
   };
   const doSignUp = async () => {
     // console.log("Email:", email);
@@ -74,21 +71,26 @@ function SignUp() {
       "text",
       "application/json"
     );
-    if (
-      response.toLocaleLowerCase() ===
-      userRegisterSuccessMessage.toLocaleLowerCase()
-    ) {
-      console.log(userRegisterSuccessMessage.toLocaleLowerCase())
-    } else {
-      console.log(response);
-      if (response.includes(serverResponseMessageTypeStartsWith)) {
-        const errMsg = response.replaceAll(serverResponseMessageTypeStartsWith,"");
-        setInputErrorState(true);
-        setErrorMessage(errMsg);
+    if (typeof response === "string") {
+      if (
+        response.toLocaleLowerCase() ===
+        userRegisterSuccessMessage.toLocaleLowerCase()
+      ) {
+        console.log(userRegisterSuccessMessage.toLocaleLowerCase());
+      } else {
+        console.log(response);
+        // const res = response as string;
+        if (response.includes(serverResponseMessageTypeStartsWith)) {
+          const errMsg = response.replaceAll(
+            serverResponseMessageTypeStartsWith,
+            ""
+          );
+          setInputErrorState(true);
+          setErrorMessage(errMsg);
+        }
       }
     }
   };
-
 
   useEffect(() => {
     console.log("Password visibility status ", passwordVisible);
@@ -150,7 +152,7 @@ function SignUp() {
                     showPassword();
                   }}
                 >
-                  show
+                  {passwordVisible ? "hide" : "show"}
                 </label>
               </div>
               <input
@@ -176,7 +178,7 @@ function SignUp() {
                     showConfirmPassword();
                   }}
                 >
-                  show
+                  {confirmPasswordVisible ? "hide" : "show"}
                 </label>
               </div>
               <input
@@ -201,15 +203,18 @@ function SignUp() {
               Create Account
             </button>
             <div className="mt-4 text-sm text-center text-grey-dark">
-              <Link className="text-blue-700 underline cursor-pointer" to={"/login"}>Login</Link>
+              <Link
+                className="text-blue-700 underline cursor-pointer"
+                to={"/login"}
+              >
+                Login
+              </Link>
             </div>
             <div className="mt-4 text-sm text-center text-grey-dark">
               By signing up, you agree to the Terms of Service and Privacy
               Policy
             </div>
           </div>
-
-        
         </div>
       </div>
     </>
