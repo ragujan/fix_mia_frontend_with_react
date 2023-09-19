@@ -5,6 +5,9 @@ import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
 import { Link } from "react-router-dom";
 function SignUp() {
+
+  const title = "Signup";
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
@@ -103,7 +106,7 @@ function SignUp() {
             <div className="flex justify-center w-full ">
               <img className="w-10 h-10" src={logoImage} alt="" />
             </div>
-            <h1 className="mb-4 text-3xl font-semibold text-center">Sign up</h1>
+            <h1 className="mb-4 text-3xl font-semibold text-center">{title}</h1>
             {/* error message div */}
             {inputErrorState ? (
               <div

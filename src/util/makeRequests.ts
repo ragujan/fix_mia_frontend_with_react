@@ -11,14 +11,9 @@ async function makeRequests(
         headers: HeadersInit | undefined,
         body: string | FormData
     }
-
-
-
     const requestHeaders: HeadersInit = new Headers();
     requestHeaders.set('Content-Type', contentType);
     requestHeaders.set('Accept', responseType === 'json' ? 'application/json' : (responseType === 'text' ? 'text/plain' : 'text/html'))
-
-
     try {
         const requestOptions: requestOptionsType = {
             method,
@@ -38,7 +33,9 @@ async function makeRequests(
             if (method === "GET" && typeof data === 'string') {
                 requestOptions.method = "GET";
                 const params = new URLSearchParams(data);
-                url += `?${params}`
+                // if (data != "") {
+                    url += `?${params}`
+                // }
                 response = await fetch(url);
             }
 

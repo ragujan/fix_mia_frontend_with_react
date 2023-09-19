@@ -1,12 +1,14 @@
-// import React from 'react'
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
 import { Link } from "react-router-dom";
+import GoogleLoginButton from "./GoogleLoginButton";
+
 function Login() {
+  const title = "Login";
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [googleId, setGoogleId] = useState("");
+ 
   // const google_client_id = process.env.GOOGLE_CLIENT_ID;
   const [email, setEmail] = useState("rag@gmail.com");
   const [password, setPassword] = useState("123Rag###rag");
@@ -18,28 +20,7 @@ function Login() {
     setPasswordVisible(!passwordVisible);
   };
 
-  useEffect(() => {
-    const setGoogleIdFunc = async () => {
-      const id = await requestGoogleId();
-      console.log(typeof id === "string");
-      setGoogleId(id);
-      console.log("google ", googleId)
-      console.log("google id not there man");
-    };
 
-    // Call the function directly when the component mounts
-    setGoogleIdFunc();
-  }, [googleId]);
-
-  const requestGoogleId: () => Promise<string> = async () => {
-    const url = "http://localhost:8080/fix_mia_app_war_exploded/googleapi";
-    const response = await makeRequests("GET", url, "", "text", "text/plain");
-    if (typeof response === "string") {
-      return response;
-    } else {
-      return "";
-    }
-  };
   const doLogin = async () => {
     const formData = new FormData();
     formData.append("email", email);
@@ -63,6 +44,7 @@ function Login() {
       email: email,
       password: password,
     });
+    // const url = "/api/loginuser";
     const url = "http://localhost:8080/fix_mia_app_war_exploded/loginuser";
     const response = await makeRequests(
       "POST",
@@ -102,7 +84,7 @@ function Login() {
             <div className="flex justify-center w-full ">
               <img className="w-10 h-10" src={logoImage} alt="" />
             </div>
-            <h1 className="mb-4 text-3xl font-semibold text-center">Login</h1>
+            <h1 className="mb-4 text-3xl font-semibold text-center">{title}</h1>
             {/* error message div */}
             {inputErrorState ? (
               <div
@@ -165,6 +147,9 @@ function Login() {
             >
               Login
             </button>
+            <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
+                  <GoogleLoginButton/>
+            </div>
             {/* <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
 
                     <div id="g_id_onload"
