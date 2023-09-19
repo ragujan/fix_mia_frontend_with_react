@@ -1,9 +1,10 @@
-import {  useState } from "react";
+import {  useContext, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
 import { Link } from "react-router-dom";
 import GoogleLoginButton from "./GoogleLoginButton";
+import { GlobalContext } from "../../util/GlobalContext";
 
 function Login() {
   const title = "Login";
@@ -16,6 +17,10 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const userRegisterSuccessMessage = "Non-Exception:User is there";
   const serverResponseMessageTypeStartsWith = "Non-Exception:";
+
+  const devProdOptions = useContext(GlobalContext);
+  const apiUrl = devProdOptions.apiUrl;
+
   const showPassword = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -45,7 +50,7 @@ function Login() {
       password: password,
     });
     // const url = "/api/loginuser";
-    const url = "http://localhost:8080/fix_mia_app_war_exploded/loginuser";
+    const url = `${apiUrl}loginuser`;
     const response = await makeRequests(
       "POST",
       url,
