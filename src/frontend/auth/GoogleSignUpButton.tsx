@@ -10,7 +10,7 @@ import { GlobalContext } from "../../util/GlobalContext";
 
 
 
-function GoogleLoginButton() {
+function GoogleSignUpButton() {
   const [googleId, setGoogleId] = useState("");
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
@@ -66,12 +66,12 @@ function GoogleLoginButton() {
         const responseOffline = res as GoogleLoginResponseOffline;
         console.log("Offline response: ", responseOffline.code);
       }
-      const url = `${apiUrl}googleoauthlogin`;
+      const url = `${apiUrl}googleoauthsignup`;
 
       const formData = new FormData();
       formData.append("credential",usergoogleId);
       const response =await makeRequests("POST",url,formData,"text","");
-      console.log("response is",response)
+      console.log("response is  ",response)
 
   };
 
@@ -80,10 +80,10 @@ function GoogleLoginButton() {
       {googleId !== "" ? (
         <GoogleLogin
           clientId={googleId}
-          buttonText="Login Via Google"
+          buttonText="Sign up via Google"
           onSuccess={onSuccess}
           onFailure={() => {
-            console.log("login failed");
+            console.log("Sign Up failed");
           }}
           cookiePolicy="single_host_origin"
           isSignedIn={true}
@@ -95,4 +95,4 @@ function GoogleLoginButton() {
   );
 }
 
-export default GoogleLoginButton;
+export default GoogleSignUpButton;

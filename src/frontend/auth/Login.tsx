@@ -11,15 +11,16 @@ function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
  
   // const google_client_id = process.env.GOOGLE_CLIENT_ID;
-  const [email, setEmail] = useState("rag@gmail.com");
+  const [email, setEmail] = useState("rag@gmail3.com");
   const [password, setPassword] = useState("123Rag###rag");
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const userRegisterSuccessMessage = "Non-Exception:User is there";
+  const userRegisterSuccessMessage = "Success:User is there";
   const serverResponseMessageTypeStartsWith = "Non-Exception:";
 
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
+  const loginurl = "loginuser"
 
   const showPassword = () => {
     setPasswordVisible(!passwordVisible);
@@ -50,7 +51,7 @@ function Login() {
       password: password,
     });
     // const url = "/api/loginuser";
-    const url = `${apiUrl}loginuser`;
+    const url = `${apiUrl}${loginurl}`;
     const response = await makeRequests(
       "POST",
       url,

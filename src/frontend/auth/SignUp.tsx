@@ -4,6 +4,7 @@ import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
 import { Link } from "react-router-dom";
+import GoogleSignUpButton from "./GoogleSignUpButton";
 function SignUp() {
 
   const title = "Signup";
@@ -18,7 +19,7 @@ function SignUp() {
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const userRegisterSuccessMessage = "Non-Exception:User added successfully";
+  const userRegisterSuccessMessage = "Success:User added successfully";
   const serverResponseMessageTypeStartsWith = "Non-Exception:";
   const showPassword = () => {
     setPasswordVisible(!passwordVisible);
@@ -205,6 +206,9 @@ function SignUp() {
             >
               Create Account
             </button>
+            <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
+                  <GoogleSignUpButton/>
+            </div>
             <div className="mt-4 text-sm text-center text-grey-dark">
               <Link
                 className="text-blue-700 underline cursor-pointer"

@@ -46,6 +46,7 @@ async function makeRequests(
             }
             if (responseType.toLocaleLowerCase() === "text") {
                 const text: string = await (response as Response).text();
+                console.log("text is ",text)
                 return text;
             }
         }

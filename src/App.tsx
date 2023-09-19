@@ -7,11 +7,12 @@ import { GlobalContext } from "./util/GlobalContext";
 import getApiUrlPath from "./util/getApiUrlPath";
 import { useState } from "react";
 
-
 function App() {
   const [apiUrl] = useState(getApiUrlPath());
+
   return (
     <>
+
       {/* <Login/> */}
       <GlobalContext.Provider value={{apiUrl}}>
         <BrowserRouter>
