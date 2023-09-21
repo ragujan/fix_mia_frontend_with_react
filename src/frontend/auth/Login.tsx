@@ -1,4 +1,4 @@
-import {  useContext, useState } from "react";
+import { useContext, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
@@ -9,23 +9,22 @@ import { GlobalContext } from "../../util/GlobalContext";
 function Login() {
   const title = "Login";
   const [passwordVisible, setPasswordVisible] = useState(false);
- 
+
   // const google_client_id = process.env.GOOGLE_CLIENT_ID;
   const [email, setEmail] = useState("rag@gmail3.com");
   const [password, setPassword] = useState("123Rag###rag");
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const userRegisterSuccessMessage = "Success:User is there";
-  const serverResponseMessageTypeStartsWith = "Non-Exception:";
+  // const userRegisterSuccessMessage = "Success:User is there";
+  // const serverResponseMessageTypeStartsWith = "Non-Exception:";
 
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
-  const loginurl = "loginuser"
+  const loginurl = "loginuser";
 
   const showPassword = () => {
     setPasswordVisible(!passwordVisible);
   };
-
 
   const doLogin = async () => {
     const formData = new FormData();
@@ -56,30 +55,45 @@ function Login() {
       "POST",
       url,
       myData,
-      "text",
+      "json",
       "application/json"
     );
-    if (typeof response === "string") {
-      if (
-        response.toLocaleLowerCase() ===
-        userRegisterSuccessMessage.toLocaleLowerCase()
-      ) {
+
+    if (typeof response === "object" && response !== null) {
+      const json = JSON.parse(JSON.stringify(response));
+
+      if (json[0].message === "login success") {
+        console.log("going to home page man");
         setInputErrorState(false);
-        console.log("Success");
-        console.log(userRegisterSuccessMessage.toLocaleLowerCase());
+        setErrorMessage("");
+        return;
       } else {
-        console.log(response);
-        console.log("bad");
-        if (response.includes(serverResponseMessageTypeStartsWith)) {
-          const errMsg = response.replaceAll(
-            serverResponseMessageTypeStartsWith,
-            ""
-          );
-          setInputErrorState(true);
-          setErrorMessage(errMsg);
-        }
+        console.log(json[0].message);
+        setInputErrorState(true);
+        setErrorMessage(json[0].message);
       }
     }
+    // if (typeof response === "string") {
+    //   if (
+    //     response.toLocaleLowerCase() ===
+    //     userRegisterSuccessMessage.toLocaleLowerCase()
+    //   ) {
+    //     setInputErrorState(false);
+    //     console.log("Success");
+    //     console.log(userRegisterSuccessMessage.toLocaleLowerCase());
+    //   } else {
+    //     console.log(response);
+    //     console.log("bad");
+    //     if (response.includes(serverResponseMessageTypeStartsWith)) {
+    //       const errMsg = response.replaceAll(
+    //         serverResponseMessageTypeStartsWith,
+    //         ""
+    //       );
+    //       setInputErrorState(true);
+    //       setErrorMessage(errMsg);
+    //     }
+    //   }
+    // }
   };
 
   return (
@@ -154,7 +168,7 @@ function Login() {
               Login
             </button>
             <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
-                  <GoogleLoginButton/>
+              <GoogleLoginButton />
             </div>
             {/* <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
 

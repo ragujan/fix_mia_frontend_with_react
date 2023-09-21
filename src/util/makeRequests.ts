@@ -34,19 +34,22 @@ async function makeRequests(
                 requestOptions.method = "GET";
                 const params = new URLSearchParams(data);
                 // if (data != "") {
-                    url += `?${params}`
+                url += `?${params}`
                 // }
                 response = await fetch(url);
             }
 
 
             if (responseType.toLocaleLowerCase() === "json") {
-                const json: JSON = await (response as Response).json();
-                return json;
+                // const json: JSON = await (response as Response).json();
+                if (typeof response === "object" && response !== null) {
+                    const json = await response.json();
+                    return json;
+                }
             }
             if (responseType.toLocaleLowerCase() === "text") {
                 const text: string = await (response as Response).text();
-                console.log("text is ",text)
+                console.log("text is ", text)
                 return text;
             }
         }
