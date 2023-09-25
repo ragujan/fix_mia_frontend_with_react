@@ -6,11 +6,11 @@ import {
 } from "react-google-login";
 import { gapi } from "gapi-script";
 import { makeRequests } from "../../util/makeRequests";
-import { GlobalContext } from "../../util/GlobalContext";
+import { GlobalContext } from "../../context/GlobalContext";
 
 
 
-function GoogleSignUpButton() {
+function GoogleLoginButton() {
   const [googleId, setGoogleId] = useState("");
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
@@ -66,12 +66,12 @@ function GoogleSignUpButton() {
         const responseOffline = res as GoogleLoginResponseOffline;
         console.log("Offline response: ", responseOffline.code);
       }
-      const url = `${apiUrl}googleoauthsignup`;
+      const url = `${apiUrl}googleoauthlogin`;
 
       const formData = new FormData();
       formData.append("credential",usergoogleId);
       const response =await makeRequests("POST",url,formData,"text","");
-      console.log("response is  ",response)
+      console.log("response is",response)
 
   };
 
@@ -80,10 +80,10 @@ function GoogleSignUpButton() {
       {googleId !== "" ? (
         <GoogleLogin
           clientId={googleId}
-          buttonText="Sign up via Google"
+          buttonText="Login Via Google"
           onSuccess={onSuccess}
           onFailure={() => {
-            console.log("Sign Up failed");
+            console.log("login failed");
           }}
           cookiePolicy="single_host_origin"
           isSignedIn={true}
@@ -95,4 +95,4 @@ function GoogleSignUpButton() {
   );
 }
 
-export default GoogleSignUpButton;
+export default GoogleLoginButton;
