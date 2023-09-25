@@ -1,11 +1,11 @@
 import { createContext } from "react";
 
-interface AuthData {
+export interface AuthData {
   user: string;
   roles: number[];
 }
 
-interface ContextOption {
+export interface ContextOption {
   auth: AuthData;
   setAuth: React.Dispatch<React.SetStateAction<AuthData>>;
 }

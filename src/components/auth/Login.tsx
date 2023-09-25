@@ -2,24 +2,25 @@ import { useContext, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
-import { Link} from "react-router-dom";
+import { Link, useLocation, useNavigate} from "react-router-dom";
 import GoogleLoginButton from "./GoogleLoginButton";
 import { GlobalContext } from "../../context/GlobalContext";
 import useAuth from "../../hooks/useAuth";
-import AuthContext from "../../context/AuthContext";
 
 function Login() {
   const title = "Login";
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const { auth,setAuth } = useAuth();
-  // const navigate = useNavigate();
-  // const location = useLocation();
-  // const from = location.state?.from?.pathname || "/";
+
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/linkpage";
 
   // const google_client_id = process.env.GOOGLE_CLIENT_ID;
-  const [email, setEmail] = useState("rag@gmail3.com");
-  const [password, setPassword] = useState("123Rag###rag");
+  const [email, setEmail] = useState("rag@gmail.com");
+  const [password, setPassword] = useState("ragbag###1111RRR");
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   // const userRegisterSuccessMessage = "Success:User is there";
@@ -82,6 +83,7 @@ function Login() {
         });
         setErrorMessage("");
         alert(auth.roles)
+        navigate(from, {replace:true})
         return;
       } else {
         console.log(json[0].message);

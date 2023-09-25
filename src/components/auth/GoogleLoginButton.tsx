@@ -7,6 +7,8 @@ import {
 import { gapi } from "gapi-script";
 import { makeRequests } from "../../util/makeRequests";
 import { GlobalContext } from "../../context/GlobalContext";
+import useAuth from "../../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 
@@ -14,7 +16,11 @@ function GoogleLoginButton() {
   const [googleId, setGoogleId] = useState("");
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
+  const { auth,setAuth } = useAuth();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/linkpage";
   
   useEffect(() => {
     const setGoogleIdFunc = async () => {
@@ -70,8 +76,32 @@ function GoogleLoginButton() {
 
       const formData = new FormData();
       formData.append("credential",usergoogleId);
-      const response =await makeRequests("POST",url,formData,"text","");
+      const response =await makeRequests("POST",url,formData,"json","");
       console.log("response is",response)
+
+      if (typeof response === "object" && response !== null) {
+        const json = JSON.parse(JSON.stringify(response));
+  
+        if (json[0].message === "login success") {
+          console.log("going to home page man");
+          const access_token = json[0]["access_token"];
+          const refresh_token = json[0]["refresh_token"];
+          localStorage.setItem("access_token", `Bearer ${access_token}`);
+          localStorage.setItem("refresh_token", `Bearer ${refresh_token}`);
+          // setInputErrorState(false);
+          setAuth({
+            user: "rag",
+            roles: [5151],
+          });
+      
+          alert(auth.roles)
+          navigate(from, {replace:true})
+          return;
+        } else {
+          console.log(json[0].message);
+  
+        }
+      }
 
   };
 

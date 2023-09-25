@@ -12,6 +12,7 @@ import Home from "./components/Home";
 import Unauthorized from "./components/Unauthorized";
 import Admin from "./components/Admin";
 import Moderator from "./components/Moderator";
+import LinkPage from "./components/LinkPage";
 
 const ROLES = {
   User: 2001,
@@ -36,9 +37,14 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+              <Route path="/linkpage" element={<LinkPage />} />
+            </Route>
+
             <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
               <Route path="/home" element={<Home />} />
             </Route>
+
             <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
               <Route path="/admin" element={<Admin />} />
             </Route>

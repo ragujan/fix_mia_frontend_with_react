@@ -10,6 +10,7 @@ import { GlobalContext } from "../../context/GlobalContext";
 
 
 
+
 function GoogleSignUpButton() {
   const [googleId, setGoogleId] = useState("");
   const devProdOptions = useContext(GlobalContext);
@@ -72,6 +73,8 @@ function GoogleSignUpButton() {
       formData.append("credential",usergoogleId);
       const response =await makeRequests("POST",url,formData,"text","");
       console.log("response is  ",response)
+
+
 
   };
 
