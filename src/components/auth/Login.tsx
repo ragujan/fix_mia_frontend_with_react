@@ -2,17 +2,25 @@ import { useContext, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate} from "react-router-dom";
 import GoogleLoginButton from "./GoogleLoginButton";
-import { GlobalContext } from "../../util/GlobalContext";
+import { GlobalContext } from "../../context/GlobalContext";
+import useAuth from "../../hooks/useAuth";
 
 function Login() {
   const title = "Login";
   const [passwordVisible, setPasswordVisible] = useState(false);
 
+  const { auth,setAuth } = useAuth();
+
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/linkpage";
+
   // const google_client_id = process.env.GOOGLE_CLIENT_ID;
-  const [email, setEmail] = useState("rag@gmail3.com");
-  const [password, setPassword] = useState("123Rag###rag");
+  const [email, setEmail] = useState("rag@gmail.com");
+  const [password, setPassword] = useState("ragbag###1111RRR");
   const [inputErrorState, setInputErrorState] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   // const userRegisterSuccessMessage = "Success:User is there";
@@ -64,8 +72,18 @@ function Login() {
 
       if (json[0].message === "login success") {
         console.log("going to home page man");
+        const access_token = json[0]["access_token"];
+        const refresh_token = json[0]["refresh_token"];
+        localStorage.setItem("access_token", `Bearer ${access_token}`);
+        localStorage.setItem("refresh_token", `Bearer ${refresh_token}`);
         setInputErrorState(false);
+        setAuth({
+          user: "rag",
+          roles: [5151],
+        });
         setErrorMessage("");
+        alert(auth.roles)
+        navigate(from, {replace:true})
         return;
       } else {
         console.log(json[0].message);
@@ -73,27 +91,6 @@ function Login() {
         setErrorMessage(json[0].message);
       }
     }
-    // if (typeof response === "string") {
-    //   if (
-    //     response.toLocaleLowerCase() ===
-    //     userRegisterSuccessMessage.toLocaleLowerCase()
-    //   ) {
-    //     setInputErrorState(false);
-    //     console.log("Success");
-    //     console.log(userRegisterSuccessMessage.toLocaleLowerCase());
-    //   } else {
-    //     console.log(response);
-    //     console.log("bad");
-    //     if (response.includes(serverResponseMessageTypeStartsWith)) {
-    //       const errMsg = response.replaceAll(
-    //         serverResponseMessageTypeStartsWith,
-    //         ""
-    //       );
-    //       setInputErrorState(true);
-    //       setErrorMessage(errMsg);
-    //     }
-    //   }
-    // }
   };
 
   return (

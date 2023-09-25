@@ -6,15 +6,21 @@ import {
 } from "react-google-login";
 import { gapi } from "gapi-script";
 import { makeRequests } from "../../util/makeRequests";
-import { GlobalContext } from "../../util/GlobalContext";
+import { GlobalContext } from "../../context/GlobalContext";
+import useAuth from "../../hooks/useAuth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 
-function GoogleSignUpButton() {
+function GoogleLoginButton() {
   const [googleId, setGoogleId] = useState("");
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
+  const { auth,setAuth } = useAuth();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/linkpage";
   
   useEffect(() => {
     const setGoogleIdFunc = async () => {
@@ -66,12 +72,36 @@ function GoogleSignUpButton() {
         const responseOffline = res as GoogleLoginResponseOffline;
         console.log("Offline response: ", responseOffline.code);
       }
-      const url = `${apiUrl}googleoauthsignup`;
+      const url = `${apiUrl}googleoauthlogin`;
 
       const formData = new FormData();
       formData.append("credential",usergoogleId);
-      const response =await makeRequests("POST",url,formData,"text","");
-      console.log("response is  ",response)
+      const response =await makeRequests("POST",url,formData,"json","");
+      console.log("response is",response)
+
+      if (typeof response === "object" && response !== null) {
+        const json = JSON.parse(JSON.stringify(response));
+  
+        if (json[0].message === "login success") {
+          console.log("going to home page man");
+          const access_token = json[0]["access_token"];
+          const refresh_token = json[0]["refresh_token"];
+          localStorage.setItem("access_token", `Bearer ${access_token}`);
+          localStorage.setItem("refresh_token", `Bearer ${refresh_token}`);
+          // setInputErrorState(false);
+          setAuth({
+            user: "rag",
+            roles: [5151],
+          });
+      
+          alert(auth.roles)
+          navigate(from, {replace:true})
+          return;
+        } else {
+          console.log(json[0].message);
+  
+        }
+      }
 
   };
 
@@ -80,10 +110,10 @@ function GoogleSignUpButton() {
       {googleId !== "" ? (
         <GoogleLogin
           clientId={googleId}
-          buttonText="Sign up via Google"
+          buttonText="Login Via Google"
           onSuccess={onSuccess}
           onFailure={() => {
-            console.log("Sign Up failed");
+            console.log("login failed");
           }}
           cookiePolicy="single_host_origin"
           isSignedIn={true}
@@ -95,4 +125,4 @@ function GoogleSignUpButton() {
   );
 }
 
-export default GoogleSignUpButton;
+export default GoogleLoginButton;
