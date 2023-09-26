@@ -13,11 +13,17 @@ import Unauthorized from "./components/Unauthorized";
 import Admin from "./components/Admin";
 import Moderator from "./components/Moderator";
 import LinkPage from "./components/LinkPage";
-
-const ROLES = {
-  User: 2001,
+import UserDashboard from "./components/UserDashboard";
+import TestLogin from "./components/TestLogin";
+interface ROLESTYPE {
+  User: number;
+  Moderator: number;
+  Admin: number;
+}
+const ROLES: ROLESTYPE = {
+  User: 10001,
   Moderator: 1984,
-  Admin: 5151,
+  Admin: 20001,
 };
 function App() {
   const [apiUrl] = useState(getApiUrlPath());
@@ -37,18 +43,20 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
-              <Route path="/linkpage" element={<LinkPage />} />
-            </Route>
-
-            <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
               <Route path="/home" element={<Home />} />
+            {/* <Route path="/linkpage" element={<LinkPage />} /> */}
+
+            <Route element={<RequireAuth allowedRole={ROLES.User} />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/linkpage" element={<LinkPage />} />
+              <Route path="/testlogin" element={< TestLogin/>} />
+              <Route path="/userdashboard" element={<UserDashboard />} />
             </Route>
 
-            <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+            <Route element={<RequireAuth allowedRole={ROLES.Admin} />}>
               <Route path="/admin" element={<Admin />} />
             </Route>
-            <Route element={<RequireAuth allowedRoles={[ROLES.Moderator]} />}>
+            <Route element={<RequireAuth allowedRole={ROLES.Moderator} />}>
               <Route path="/moderator" element={<Moderator />} />
             </Route>
           </Route>

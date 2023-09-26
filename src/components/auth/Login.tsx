@@ -1,19 +1,19 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import logoImage from "./../../assets/resources/image_resources/logo.png";
 import { validate } from "../../util/Validate";
 import { makeRequests } from "../../util/makeRequests";
-import { Link, useLocation, useNavigate} from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "./GoogleLoginButton";
 import { GlobalContext } from "../../context/GlobalContext";
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
+import AuthContext from "../../context/AuthContext";
 
 function Login() {
   const title = "Login";
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const { auth,setAuth } = useAuth();
+  const { auth, setAuth } = useContext(AuthContext);
 
-  
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/linkpage";
@@ -33,7 +33,13 @@ function Login() {
   const showPassword = () => {
     setPasswordVisible(!passwordVisible);
   };
-
+  useEffect(() => {
+    // This code will run every time auth changes
+    console.log("Auth updated:", auth);
+    if (auth.role !== 0) {
+      navigate(from, { replace: true });
+    }
+  }, [auth]);
   const doLogin = async () => {
     const formData = new FormData();
     formData.append("email", email);
@@ -74,16 +80,26 @@ function Login() {
         console.log("going to home page man");
         const access_token = json[0]["access_token"];
         const refresh_token = json[0]["refresh_token"];
+        console.log("refresh token is ", refresh_token);
+        const user_type = json[0]["user-type"];
         localStorage.setItem("access_token", `Bearer ${access_token}`);
         localStorage.setItem("refresh_token", `Bearer ${refresh_token}`);
         setInputErrorState(false);
-        setAuth({
+        console.log("user type is", user_type);
+        const authObject = {
           user: "rag",
-          roles: [5151],
-        });
+          role: 10001,
+          token: access_token,
+          refreshToken: refresh_token,
+          userType: user_type,
+        };
+        setAuth(authObject);
         setErrorMessage("");
-        alert(auth.roles)
-        navigate(from, {replace:true})
+        // alert("auth roles are"+ " "+auth.roles);
+        console.log(auth);
+        if (auth.refreshToken !== "") {
+          navigate(from, { replace: true });
+        }
         return;
       } else {
         console.log(json[0].message);
