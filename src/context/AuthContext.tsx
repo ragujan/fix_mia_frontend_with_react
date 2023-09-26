@@ -2,7 +2,10 @@ import { createContext } from "react";
 
 export interface AuthData {
   user: string;
-  roles: number[];
+  role: number;
+  token: string;
+  refreshToken: string;
+  userType:number
 }
 
 export interface ContextOption {
@@ -12,7 +15,10 @@ export interface ContextOption {
 const AuthContext = createContext<ContextOption>({
   auth: {
     user: "",
-    roles: [],
+    role: 0,
+    token:"",
+    refreshToken:"",
+    userType:0,
   },
 
   setAuth: () => {},

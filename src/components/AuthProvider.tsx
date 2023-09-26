@@ -8,7 +8,11 @@ interface Props {
 export const AuthProvider = ({ children }: Props) => {
   const [auth, setAuth] = useState<AuthData>({
     user: "",
-    roles: [],
+    role: 0,
+    token:"",
+    refreshToken:"",
+    userType:0,
+
   });
 
   return (
