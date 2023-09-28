@@ -15,7 +15,7 @@ function TestLogin() {
     if (auth.role !== 0) {
       navigate(from, { replace: true });
     }
-  }, [auth]);
+  }, [auth, from, navigate]);
   return (
     <div>
       <h1>Unauthorized Page</h1>

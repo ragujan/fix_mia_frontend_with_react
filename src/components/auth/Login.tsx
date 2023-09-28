@@ -13,7 +13,7 @@ function Login() {
   const title = "Login";
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const { auth, setAuth } = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
   const [cookies, setCookies] = useCookies();
 
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ function Login() {
       console.log("auth role is changed to not zero ");
       navigate(from, { replace: true });
     }
-  }, [auth]);
+  }, [auth, from, navigate]);
   const doLogin = async () => {
     const formData = new FormData();
     formData.append("email", email);
@@ -108,7 +108,6 @@ function Login() {
         // alert("auth roles are"+ " "+auth.roles);
         console.log(auth);
 
-        setTimeout(() => {}, 5000);
         console.log("old saved token ", cookies["access-token"]);
         console.log("old saved rftoken ", cookies["refresh-token"]);
         console.log("new token ", access_token);

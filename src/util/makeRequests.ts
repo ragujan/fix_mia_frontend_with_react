@@ -29,6 +29,7 @@ async function makeRequests(
                 requestOptions.method = "POST";
                 requestOptions.body = data;
                 response = await fetch(url, requestOptions);
+
             }
             if (method === "GET" && typeof data === 'string') {
                 requestOptions.method = "GET";
@@ -43,19 +44,30 @@ async function makeRequests(
             if (responseType.toLocaleLowerCase() === "json") {
                 // const json: JSON = await (response as Response).json();
                 if (typeof response === "object" && response !== null) {
-                    const json = await response.json();
-                    return json;
+                    console.log("came here response type is json")
+                    try {
+                        const json = await response.json();
+                        return json;
+                    } catch (error) {
+                        console.error(error)
+                    }
+
                 }
             }
             if (responseType.toLocaleLowerCase() === "text") {
-                const text: string = await (response as Response).text();
-                console.log("text is ", text)
-                return text;
+                try {
+                    const text: string = await (response as Response).text();
+                    console.log("text is ", text)
+                    return text;
+                } catch (error) {
+                    console.error(error)
+                }
+
             }
         }
 
     } catch (e) {
-        console.log(JSON.stringify(e))
+        console.error(e);
         // throw new Error(JSON.stringify(e))
     }
 }

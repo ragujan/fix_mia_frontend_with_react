@@ -7,7 +7,7 @@ import {
 import { gapi } from "gapi-script";
 import { makeRequests } from "../../util/makeRequests";
 import { GlobalContext } from "../../context/GlobalContext";
-import useAuth from "../../hooks/useAuth";
+
 import { useLocation, useNavigate } from "react-router-dom";
 
 
@@ -16,13 +16,22 @@ function GoogleLoginButton() {
   const [googleId, setGoogleId] = useState("");
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
-  const { auth,setAuth } = useAuth();
+
 
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/linkpage";
   
   useEffect(() => {
+    const requestGoogleId: () => Promise<string> = async () => {
+      const url = `${apiUrl}googleapi`;
+      const response = await makeRequests("GET", url, "", "text", "text/plain");
+      if (typeof response === "string") {
+        return response;
+      } else {
+        return "";
+      }
+    };
     const setGoogleIdFunc = async () => {
       const id = await requestGoogleId();
       console.log(typeof id === "string");
@@ -50,15 +59,7 @@ function GoogleLoginButton() {
       gapi.load("client:auth2", start);
     }
   }, [googleId]);
-  const requestGoogleId: () => Promise<string> = async () => {
-    const url = `${apiUrl}googleapi`;
-    const response = await makeRequests("GET", url, "", "text", "text/plain");
-    if (typeof response === "string") {
-      return response;
-    } else {
-      return "";
-    }
-  };
+
   const onSuccess =async (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     let usergoogleId :string = "";
     if ('profileObj' in res) {
@@ -89,12 +90,7 @@ function GoogleLoginButton() {
           localStorage.setItem("access_token", `Bearer ${access_token}`);
           localStorage.setItem("refresh_token", `Bearer ${refresh_token}`);
           // setInputErrorState(false);
-          setAuth({
-            user: "rag",
-            roles: [5151],
-          });
-      
-          alert(auth.roles)
+
           navigate(from, {replace:true})
           return;
         } else {
