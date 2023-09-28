@@ -44,7 +44,7 @@ async function makeRequests(
             if (responseType.toLocaleLowerCase() === "json") {
                 // const json: JSON = await (response as Response).json();
                 if (typeof response === "object" && response !== null) {
-                    console.log("came here response type is json")
+                    // console.log("came here response type is json")
                     try {
                         const json = await response.json();
                         return json;
@@ -57,7 +57,7 @@ async function makeRequests(
             if (responseType.toLocaleLowerCase() === "text") {
                 try {
                     const text: string = await (response as Response).text();
-                    console.log("text is ", text)
+                    // console.log("text is ", text)
                     return text;
                 } catch (error) {
                     console.error(error)

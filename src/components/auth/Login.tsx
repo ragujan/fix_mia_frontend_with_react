@@ -84,14 +84,13 @@ function Login() {
         const access_token = json[0]["access_token"];
         const refresh_token = json[0]["refresh_token"];
         const user = json[0]["email"];
-        console.log("refresh token is ", refresh_token);
         const user_type = json[0]["user-type"];
-
+        console.log("refresh token is ", refresh_token);
         setInputErrorState(false);
         console.log("user type is", user_type);
 
-        setCookies("access-token", access_token);
-        setCookies("refresh-token", refresh_token);
+        setCookies("access_token", access_token);
+        setCookies("refresh_token", refresh_token);
         setCookies("user_type", user_type);
         setCookies("user", user);
 
@@ -108,8 +107,8 @@ function Login() {
         // alert("auth roles are"+ " "+auth.roles);
         console.log(auth);
 
-        console.log("old saved token ", cookies["access-token"]);
-        console.log("old saved rftoken ", cookies["refresh-token"]);
+        console.log("old saved token ", cookies["access_token"]);
+        console.log("old saved rftoken ", cookies["refresh_token"]);
         console.log("new token ", access_token);
         console.log("new rf token ", refresh_token);
         navigate(from, { replace: true });
@@ -193,7 +192,7 @@ function Login() {
               Login
             </button>
             <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
-              <GoogleLoginButton />
+              <GoogleLoginButton setInputErrorState={setInputErrorState} setErrorMessage={setErrorMessage}/>
             </div>
             {/* <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
 

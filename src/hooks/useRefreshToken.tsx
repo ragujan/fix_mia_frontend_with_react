@@ -11,8 +11,8 @@ function useRefreshToken() {
   const refresh = async () => {
     //send this token to refersh
     if (
-      cookies["refresh-tokne"] !== "" ||
-      cookies["refresh-token"] !== undefined
+      cookies["refresh_tokne"] !== "" ||
+      cookies["refresh_token"] !== undefined
     ) {
       // alert("calling refresh");
       const rfToken = cookies["refresh-token"];
@@ -27,7 +27,7 @@ function useRefreshToken() {
           if (json[0]["status"] === "success") {
             const newAccessToken = json[0]["access_token"];
             console.log("new acess token created", newAccessToken);
-            setCookies("access-token", newAccessToken);
+            setCookies("access_token", newAccessToken);
             return newAccessToken;
           } else {
             console.log("token is not valid called from refresh token");

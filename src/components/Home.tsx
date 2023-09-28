@@ -3,6 +3,7 @@ import useRefreshToken from "../hooks/useRefreshToken";
 import usePrivateRequestSender from "../hooks/usePrivateRequestSender";
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [cookies, setCookies] = useCookies();
@@ -15,7 +16,6 @@ function Home() {
     const url = `${devProdOptions.apiUrl}${endpointPath}`;
     const formData = new FormData();
     formData.append("bro", "bro bro");
-    console.log("url is ", url);
     try {
       const respone = await privateResponseSender(
         "POST",
@@ -30,8 +30,8 @@ function Home() {
     }
   };
   const removeCookies = () => {
-    setCookies("access-token", "");
-    setCookies("refresh-token", "");
+    setCookies("access_token", "");
+    setCookies("refresh_token", "");
     setCookies("user_type", "");
     setCookies("user", "");
   };
@@ -39,7 +39,7 @@ function Home() {
   return (
     <div>
       <h1>Bro this is home</h1>
-      <h1>{cookies["access-token"]}</h1>
+      <h1>{cookies["access_token"]}</h1>
 
       <button onClick={() => refresh()}>New token</button>
       <br />
@@ -49,6 +49,11 @@ function Home() {
       >
         to send private requests
       </button>
+      <br />
+      <Link to="/linkpage">Link Page</Link>
+
+      <br />
+      <br />
       <br />
       <button
         onClick={() => {
