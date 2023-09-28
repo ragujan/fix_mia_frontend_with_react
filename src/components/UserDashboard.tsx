@@ -11,10 +11,12 @@ const UserDashboard = () => {
             <Link to="/login">Login</Link>
             <br />
             <h2>Private</h2>
-            <Link to="/">Home</Link>
-            <Link to="/admin">Admin Page</Link>
+            <Link to="/home">Home</Link>
+            <br />
+            <br />
             <Link to="/linkpage">Link Page</Link>
 
+            <br />
             <br />
             <br />
             <br />

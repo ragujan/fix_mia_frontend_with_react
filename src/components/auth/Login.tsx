@@ -7,12 +7,14 @@ import GoogleLoginButton from "./GoogleLoginButton";
 import { GlobalContext } from "../../context/GlobalContext";
 // import useAuth from "../../hooks/useAuth";
 import AuthContext from "../../context/AuthContext";
+import { useCookies } from "react-cookie";
 
 function Login() {
   const title = "Login";
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const { auth, setAuth } = useContext(AuthContext);
+  const [cookies, setCookies] = useCookies();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,7 +38,8 @@ function Login() {
   useEffect(() => {
     // This code will run every time auth changes
     console.log("Auth updated:", auth);
-    if (auth.role !== 0) {
+    if (auth.role === 10001) {
+      console.log("auth role is changed to not zero ");
       navigate(from, { replace: true });
     }
   }, [auth]);
@@ -80,27 +83,37 @@ function Login() {
         console.log("going to home page man");
         const access_token = json[0]["access_token"];
         const refresh_token = json[0]["refresh_token"];
+        const user = json[0]["email"];
         console.log("refresh token is ", refresh_token);
         const user_type = json[0]["user-type"];
-        localStorage.setItem("access_token", `Bearer ${access_token}`);
-        localStorage.setItem("refresh_token", `Bearer ${refresh_token}`);
+
         setInputErrorState(false);
         console.log("user type is", user_type);
-        const authObject = {
-          user: "rag",
-          role: 10001,
-          token: access_token,
-          refreshToken: refresh_token,
-          userType: user_type,
-        };
-        setAuth(authObject);
+
+        setCookies("access-token", access_token);
+        setCookies("refresh-token", refresh_token);
+        setCookies("user_type", user_type);
+        setCookies("user", user);
+
+        // const authObject = {
+        //   user: user,
+        //   role: 10001,
+        //   token: access_token,
+        //   refreshToken: refresh_token,
+        //   userType: user_type,
+        // };
+        // setAuth(authObject);
+
         setErrorMessage("");
         // alert("auth roles are"+ " "+auth.roles);
         console.log(auth);
-        if (auth.refreshToken !== "") {
-          navigate(from, { replace: true });
-        }
-        return;
+
+        setTimeout(() => {}, 5000);
+        console.log("old saved token ", cookies["access-token"]);
+        console.log("old saved rftoken ", cookies["refresh-token"]);
+        console.log("new token ", access_token);
+        console.log("new rf token ", refresh_token);
+        navigate(from, { replace: true });
       } else {
         console.log(json[0].message);
         setInputErrorState(true);
