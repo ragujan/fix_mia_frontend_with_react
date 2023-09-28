@@ -1,30 +1,48 @@
-import { useContext } from "react"
-import useAuth from "./useAuth"
-interface AuthDataType {
-    user: string;
-    roles: number[];
-  }
-  
+import { useContext } from "react";
+
+import { useCookies } from "react-cookie";
+import { makeRequests } from "../util/makeRequests";
+import { GlobalContext } from "../context/GlobalContext";
+
 function useRefreshToken() {
-    const [setAuth] = useAuth()
-    const refresh = async ()=>{
-        //send this token to refersh
-        const response = {
-            data:{
-                accessToken:"111",
-            }
+  const [cookies, setCookies] = useCookies();
+  const devProdOptions = useContext(GlobalContext);
+
+  const refresh = async () => {
+    //send this token to refersh
+    if (
+      cookies["refresh_tokne"] !== "" ||
+      cookies["refresh_token"] !== undefined
+    ) {
+      // alert("calling refresh");
+      const rfToken = cookies["refresh-token"];
+      const formData = new FormData();
+      const endpointPath = "refresh-token";
+      formData.append("refresh-token", rfToken);
+      const url = `${devProdOptions.apiUrl}${endpointPath}`;
+      try {
+        const response = await makeRequests("POST", url, formData, "json", "");
+        if (typeof response === "object" && response !== null) {
+          const json = JSON.parse(JSON.stringify(response));
+          if (json[0]["status"] === "success") {
+            const newAccessToken = json[0]["access_token"];
+            console.log("new acess token created", newAccessToken);
+            setCookies("access_token", newAccessToken);
+            return newAccessToken;
+          } else {
+            console.log("token is not valid called from refresh token");
+            console.log(response);
+            
+          }
+        } else {
+          console.log("user must sign in immediately");
         }
-        setAuth((prev: AuthDataType)=>{
-            console.log(JSON.stringify(prev));
-            return [...prev,response.data.accessToken]
-        })
+      } catch (error) {
+        console.error(error)
+      }
     }
- 
-  return (
-    <div>
-      
-    </div>
-  )
+  };
+  return refresh;
 }
 
-export default useRefreshToken
+export default useRefreshToken;

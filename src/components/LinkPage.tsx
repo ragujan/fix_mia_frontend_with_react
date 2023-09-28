@@ -14,15 +14,7 @@ const LinkPage = () => {
   const [rf, setRf] = useState("");
   const [tok, setTok] = useState("");
 
-  const changeAuth = () => {
-    authContext?.setAuth({
-      userType: 0,
-      refreshToken: "",
-      token: "",
-      role: 0,
-      user: "marshall",
-    });
-  };
+
 
   const checkTokenValidation = async () => {
     const formData = new FormData();
@@ -32,8 +24,9 @@ const LinkPage = () => {
     const response = await makeRequests("POST", url, formData, "json", "");
     console.log(response);
     if (response !== undefined) {
-      setRf(response[0]["refresh-token"]);
-      setTok(response[0]["access-token"]);
+      const res = JSON.parse(JSON.stringify(response))
+      setRf(res[0]["refresh-token"]);
+      setTok(res[0]["access-token"]);
     }
   };
   return (
@@ -76,14 +69,7 @@ const LinkPage = () => {
       <h1>{authContext?.auth.userType}</h1>
       <h1>{authContext?.auth.user}</h1>
       <h1>{authContext?.auth.role}</h1>
-      <button
-        className="bg-pink-400"
-        onClick={() => {
-          changeAuth();
-        }}
-      >
-        Change Auth
-      </button>
+
     </section>
   );
 };

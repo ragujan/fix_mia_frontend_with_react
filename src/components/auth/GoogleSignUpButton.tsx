@@ -18,6 +18,15 @@ function GoogleSignUpButton() {
 
   
   useEffect(() => {
+    const requestGoogleId: () => Promise<string> = async () => {
+      const url = `${apiUrl}googleapi`;
+      const response = await makeRequests("GET", url, "", "text", "text/plain");
+      if (typeof response === "string") {
+        return response;
+      } else {
+        return "";
+      }
+    };
     const setGoogleIdFunc = async () => {
       const id = await requestGoogleId();
       console.log(typeof id === "string");
@@ -32,7 +41,7 @@ function GoogleSignUpButton() {
 
     // Call the function directly when the component mounts
     setGoogleIdFunc();
-  }, [googleId]);
+  }, [apiUrl, googleId]);
   useEffect(() => {
     if (googleId !== "") {
       console.log("google client id is not empty ", googleId);
@@ -45,15 +54,7 @@ function GoogleSignUpButton() {
       gapi.load("client:auth2", start);
     }
   }, [googleId]);
-  const requestGoogleId: () => Promise<string> = async () => {
-    const url = `${apiUrl}googleapi`;
-    const response = await makeRequests("GET", url, "", "text", "text/plain");
-    if (typeof response === "string") {
-      return response;
-    } else {
-      return "";
-    }
-  };
+
   const onSuccess =async (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     let usergoogleId :string = "";
     if ('profileObj' in res) {

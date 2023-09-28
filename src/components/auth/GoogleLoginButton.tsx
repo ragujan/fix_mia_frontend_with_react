@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import {
   GoogleLogin,
   GoogleLoginResponse,
@@ -7,37 +7,40 @@ import {
 import { gapi } from "gapi-script";
 import { makeRequests } from "../../util/makeRequests";
 import { GlobalContext } from "../../context/GlobalContext";
-import useAuth from "../../hooks/useAuth";
+
 import { useLocation, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
+interface Props {
+  setInputErrorState: React.Dispatch<SetStateAction<boolean>>;
+  setErrorMessage: React.Dispatch<SetStateAction<string>>;
+}
 
-
-function GoogleLoginButton() {
+function GoogleLoginButton(props: Props) {
+  const { setInputErrorState, setErrorMessage } = props;
   const [googleId, setGoogleId] = useState("");
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
-  const { auth,setAuth } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/linkpage";
-  
+  const [ cookies,setCookies] = useCookies();
   useEffect(() => {
-    const setGoogleIdFunc = async () => {
-      const id = await requestGoogleId();
-      console.log(typeof id === "string");
-      setGoogleId(id);
-      console.log("google ", googleId);
-      if (googleId !== "") {
-        console.log("id is there man");
+    const requestGoogleId: () => Promise<string> = async () => {
+      const url = `${apiUrl}googleapi`;
+      const response = await makeRequests("GET", url, "", "text", "text/plain");
+      if (typeof response === "string") {
+        setGoogleId(response);
+        return response;
       } else {
-        console.log("id is not there man");
+        return "";
       }
     };
-
+    requestGoogleId();
     // Call the function directly when the component mounts
-    setGoogleIdFunc();
-  }, [googleId]);
+  }, [apiUrl, googleId]);
+
   useEffect(() => {
     if (googleId !== "") {
       console.log("google client id is not empty ", googleId);
@@ -50,59 +53,53 @@ function GoogleLoginButton() {
       gapi.load("client:auth2", start);
     }
   }, [googleId]);
-  const requestGoogleId: () => Promise<string> = async () => {
-    const url = `${apiUrl}googleapi`;
-    const response = await makeRequests("GET", url, "", "text", "text/plain");
-    if (typeof response === "string") {
-      return response;
+
+  const onSuccess = async (
+    res: GoogleLoginResponse | GoogleLoginResponseOffline
+  ) => {
+    let usergoogleId: string = "";
+    if ("profileObj" in res) {
+      const googleLoginResponseOnline = res as GoogleLoginResponse;
+      // console.log("login success ", googleLoginResponseOnline.profileObj);
+      console.log("success");
+      console.log(googleLoginResponseOnline.tokenId);
+      usergoogleId = googleLoginResponseOnline.tokenId;
     } else {
-      return "";
+      const responseOffline = res as GoogleLoginResponseOffline;
+      console.log("Offline response: ", responseOffline.code);
     }
-  };
-  const onSuccess =async (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    let usergoogleId :string = "";
-    if ('profileObj' in res) {
-        const googleLoginResponseOnline = res as GoogleLoginResponse;
-        // console.log("login success ", googleLoginResponseOnline.profileObj);
-        console.log("success")
-        console.log(googleLoginResponseOnline.tokenId)
-        usergoogleId =googleLoginResponseOnline.tokenId; 
+    const url = `${apiUrl}googleoauthlogin`;
 
+    const formData = new FormData();
+    formData.append("credential", usergoogleId);
+    const response = await makeRequests("POST", url, formData, "json", "");
+    console.log("response is", response);
+
+    if (typeof response === "object" && response !== null) {
+      const json = JSON.parse(JSON.stringify(response));
+
+      if (json[0].message === "login success") {
+        console.log("going to home page man");
+        const access_token = json[0]["access_token"];
+        const refresh_token = json[0]["refresh_token"];
+        const user = json[0]["email"];
+        const user_type = json[0]["user-type"];
+        setCookies("access-token", access_token);
+        setCookies("refresh-token", refresh_token);
+        setCookies("user_type", user_type);
+        setCookies("user", user);
+
+
+        setInputErrorState(false);
+        setErrorMessage("");
+        navigate(from, { replace: true });
+        return;
       } else {
-        const responseOffline = res as GoogleLoginResponseOffline;
-        console.log("Offline response: ", responseOffline.code);
+        console.log(json[0].message);
+        setInputErrorState(true);
+        setErrorMessage(json[0].message);
       }
-      const url = `${apiUrl}googleoauthlogin`;
-
-      const formData = new FormData();
-      formData.append("credential",usergoogleId);
-      const response =await makeRequests("POST",url,formData,"json","");
-      console.log("response is",response)
-
-      if (typeof response === "object" && response !== null) {
-        const json = JSON.parse(JSON.stringify(response));
-  
-        if (json[0].message === "login success") {
-          console.log("going to home page man");
-          const access_token = json[0]["access_token"];
-          const refresh_token = json[0]["refresh_token"];
-          localStorage.setItem("access_token", `Bearer ${access_token}`);
-          localStorage.setItem("refresh_token", `Bearer ${refresh_token}`);
-          // setInputErrorState(false);
-          setAuth({
-            user: "rag",
-            roles: [5151],
-          });
-      
-          alert(auth.roles)
-          navigate(from, {replace:true})
-          return;
-        } else {
-          console.log(json[0].message);
-  
-        }
-      }
-
+    }
   };
 
   return (

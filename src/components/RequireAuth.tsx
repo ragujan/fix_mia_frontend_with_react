@@ -1,44 +1,53 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { useCookies } from "react-cookie";
-import { makeRequests } from "../util/makeRequests";
-import { GlobalContext } from "../context/GlobalContext";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
- function RequireAuth(props: { allowedRole: number }) {
+function RequireAuth(props: { allowedRole: number }) {
   const { allowedRole } = props;
   const location = useLocation();
   const [cookies] = useCookies();
-  const devProdOptions = useContext(GlobalContext);
-  const apiUrl = devProdOptions.apiUrl;
-  const validatetokenpath = "validate-token";
-  const [isTokenValid, setIsTokenvalid] = useState(true);
+  const [isUserTypeExists, setIsUserTypeExists] = useState(false);
+  const [isTokenExists, setIsTokenExists] = useState(false);
 
   useEffect(() => {
-    console.log("hey");
-    console.log(cookies["user_type"]);
-  }, [cookies]);
+    const checkTokenExists = () => {
+      if (
+        cookies["access_token"] !== undefined &&
+        cookies["access_token"] !== null &&
+        cookies["access_token"] !== ""
+      ) {
+        setIsTokenExists(true);
+      } else {
+        setIsTokenExists(false);
+      }
+    };
+    const checkUserExists = () => {
+      if (
+        cookies["user_type"] !== undefined &&
+        cookies["user_type"] !== null &&
+        cookies["user_type"] !== ""
+      ) {
+        setIsUserTypeExists(true);
+      }
+    };
+    checkTokenExists();
+    checkUserExists();
+    console.log("user type exists ", isUserTypeExists);
+    console.log("token exists ", isTokenExists);
+    if (!isUserTypeExists || !isTokenExists) {
+      console.log("action must happen")
+    }
+    // console.log("hey");
+    // console.log(cookies["user_type"]);
+  }, [cookies, isUserTypeExists, isTokenExists]);
 
-  // const verifyToken =async () => {
-  //   if (
-  //     !cookies["access-token"] ||
-  //     cookies["access-token"] === "" ||
-  //     !cookies["refresh-token"] ||
-  //     cookies["refresh-token"] === ""
-  //   ) {
-  //     return false;
-  //   }
-  //   return true;
-  // };
-
-  return (
-    cookies["user_type"] === allowedRole ? (
-      <Outlet />
-    ) : cookies["user_type"] === undefined ? (
-      <Navigate to={"/login"} state={{ from: location }} replace />
-    ) : (
-      <Navigate to={"/unauthorized"} state={{ from: location }} replace />
-    )
+  return cookies["user_type"] === allowedRole ? (
+    <Outlet />
+  ) : (!isUserTypeExists || !isTokenExists) ? (
+    <Navigate to={"/login"} state={{ from: location }} replace />
+  ) : (
+    <Navigate to={"/unauthorized"} state={{ from: location }} replace />
   );
 }
 

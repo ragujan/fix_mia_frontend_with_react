@@ -10,8 +10,7 @@ import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
 import Home from "./components/Home";
 import Unauthorized from "./components/Unauthorized";
-import Admin from "./components/Admin";
-import Moderator from "./components/Moderator";
+
 import LinkPage from "./components/LinkPage";
 import UserDashboard from "./components/UserDashboard";
 import TestLogin from "./components/TestLogin";
