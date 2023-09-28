@@ -30,36 +30,29 @@ function App() {
   // alert(ROLES.User);
   return (
     <>
-      {/* <Login/> */}
       <GlobalContext.Provider value={{ apiUrl }}>
-        {/* <BrowserRouter>
-          <Routes>
-
-          </Routes>
-        </BrowserRouter> */}
         <Routes>
           <Route path="/" element={<Layout />}>
-            {/* Public routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
-              <Route path="/home" element={<Home />} />
-            {/* <Route path="/linkpage" element={<LinkPage />} /> */}
-
-            <Route element={<RequireAuth allowedRole={ROLES.User} />}>
-              <Route path="/home" element={<Home />} />
-              <Route path="/linkpage" element={<LinkPage />} />
-              <Route path="/testlogin" element={< TestLogin/>} />
-              <Route path="/userdashboard" element={<UserDashboard />} />
-            </Route>
-
-            <Route element={<RequireAuth allowedRole={ROLES.Admin} />}>
-              <Route path="/admin" element={<Admin />} />
-            </Route>
-            <Route element={<RequireAuth allowedRole={ROLES.Moderator} />}>
-              <Route path="/moderator" element={<Moderator />} />
-            </Route>
+            <Route path="/home" element={<Home />} />
+            <Route path="/testlogin" element={<TestLogin />} />
           </Route>
+
+          <Route element={<RequireAuth allowedRole={ROLES.User} />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/linkpage" element={<LinkPage />} />
+            <Route path="/testlogin" element={<TestLogin />} />
+            <Route path="/userdashboard" element={<UserDashboard />} />
+          </Route>
+          {/*
+          <Route element={<RequireAuth allowedRole={ROLES.Admin} />}>
+            <Route path="/admin" element={<Admin />} />
+          </Route>
+          <Route element={<RequireAuth allowedRole={ROLES.Moderator} />}>
+            <Route path="/moderator" element={<Moderator />} />
+          </Route> */}
         </Routes>
       </GlobalContext.Provider>
     </>

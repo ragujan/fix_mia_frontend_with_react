@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import AuthContext from "../context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
-function Unauthorized() {
+function TestLogin() {
   const { auth} = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -23,4 +23,4 @@ function Unauthorized() {
   );
 }
 
-export default Unauthorized;
+export default TestLogin;
