@@ -6,7 +6,7 @@ function getApiUrlPath() {
   if (isNginx() && isProduction()) {
     urlPath = "/api";
   }
-  console.log("hey bro bro bro bro ",urlPath)
+  // console.log("hey bro bro bro bro ",urlPath)
   return urlPath;
 }
 

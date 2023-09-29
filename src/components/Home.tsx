@@ -44,7 +44,7 @@ function Home() {
       <button onClick={() => refresh()}>New token</button>
       <br />
       <button
-        className="bg-yellow-300 p-4"
+        className="p-4 bg-yellow-300"
         onClick={() => sendPrivateRequest()}
       >
         to send private requests
@@ -53,6 +53,7 @@ function Home() {
       <Link to="/linkpage">Link Page</Link>
 
       <br />
+      <Link to="/login">Login</Link>
       <br />
       <br />
       <button

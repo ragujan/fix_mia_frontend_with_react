@@ -9,16 +9,16 @@ function TestLogin() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/linkpage";
 
-  useEffect(() => {
-    // This code will run every time auth changes
-    console.log("Auth updated:", auth);
-    if (auth.role !== 0) {
-      navigate(from, { replace: true });
-    }
-  }, [auth, from, navigate]);
+  // useEffect(() => {
+  //   // This code will run every time auth changes
+  //   console.log("Auth updated:", auth);
+  //   if (auth.role !== 0) {
+  //     navigate(from, { replace: true });
+  //   }
+  // }, [auth, from, navigate]);
   return (
     <div>
-      <h1>Unauthorized Page</h1>
+      <h1>Test login</h1>
     </div>
   );
 }

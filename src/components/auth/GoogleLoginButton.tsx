@@ -25,7 +25,7 @@ function GoogleLoginButton(props: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/linkpage";
-  const [ cookies,setCookies] = useCookies();
+  const [cookies, setCookies] = useCookies();
   useEffect(() => {
     const requestGoogleId: () => Promise<string> = async () => {
       const url = `${apiUrl}googleapi`;
@@ -37,7 +37,13 @@ function GoogleLoginButton(props: Props) {
         return "";
       }
     };
-    requestGoogleId();
+    // if (
+    //   cookies["user_type"] === undefined &&
+    //   cookies["access_token"] === undefined
+    // ) {
+      alert("bro")
+      requestGoogleId();
+    // }
     // Call the function directly when the component mounts
   }, [apiUrl, googleId]);
 
@@ -88,7 +94,6 @@ function GoogleLoginButton(props: Props) {
         setCookies("refresh-token", refresh_token);
         setCookies("user_type", user_type);
         setCookies("user", user);
-
 
         setInputErrorState(false);
         setErrorMessage("");
