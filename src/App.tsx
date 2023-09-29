@@ -14,6 +14,8 @@ import Unauthorized from "./components/Unauthorized";
 import LinkPage from "./components/LinkPage";
 import UserDashboard from "./components/UserDashboard";
 import TestLogin from "./components/TestLogin";
+import PreventLogin from "./components/PreventLogin";
+
 interface ROLESTYPE {
   User: number;
   Moderator: number;
@@ -26,13 +28,17 @@ const ROLES: ROLESTYPE = {
 };
 function App() {
   const [apiUrl] = useState(getApiUrlPath());
+
   // alert(ROLES.User);
   return (
     <>
       <GlobalContext.Provider value={{ apiUrl }}>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="/login" element={<Login />} />
+            <Route element={<PreventLogin allowedRole={ROLES.User} />}>
+              <Route path="/login" element={<Login />} />
+            </Route>
+
             <Route path="/signup" element={<SignUp />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="/home" element={<Home />} />

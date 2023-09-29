@@ -15,11 +15,10 @@ const LinkPage = () => {
   const [tok, setTok] = useState("");
 
 
-
   const checkTokenValidation = async () => {
     const formData = new FormData();
-    formData.append("access-token", cookies["access-token"]);
-    formData.append("refresh-token", cookies["refresh-token"]);
+    formData.append("access-token", cookies["access_token"]);
+    formData.append("refresh-token", cookies["refresh_token"]);
     const url = `${apiUrl}${validatetokenpath}`;
     const response = await makeRequests("POST", url, formData, "json", "");
     console.log(response);
@@ -29,6 +28,8 @@ const LinkPage = () => {
       setTok(res[0]["access-token"]);
     }
   };
+
+
   return (
     <section>
       <h1>Browser cookies are</h1>
