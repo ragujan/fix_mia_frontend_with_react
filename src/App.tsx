@@ -35,16 +35,12 @@ function App() {
       <GlobalContext.Provider value={{ apiUrl }}>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route element={<PreventLogin allowedRole={ROLES.User} />}>
-              <Route path="/login" element={<Login />} />
-            </Route>
-
             <Route path="/signup" element={<SignUp />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="/home" element={<Home />} />
             <Route path="/testlogin" element={<TestLogin />} />
           </Route>
-
+          <Route path="/login" element={<Login />} />
           <Route element={<RequireAuth allowedRole={ROLES.User} />}>
             <Route path="/home" element={<Home />} />
             <Route path="/linkpage" element={<LinkPage />} />
