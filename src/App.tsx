@@ -14,6 +14,7 @@ import Unauthorized from "./components/Unauthorized";
 import LinkPage from "./components/LinkPage";
 import UserDashboard from "./components/UserDashboard";
 import TestLogin from "./components/TestLogin";
+import { useCookies } from "react-cookie";
 import PreventLogin from "./components/PreventLogin";
 
 interface ROLESTYPE {
@@ -28,7 +29,7 @@ const ROLES: ROLESTYPE = {
 };
 function App() {
   const [apiUrl] = useState(getApiUrlPath());
-
+  const [cookies, setCookies] = useCookies();
   // alert(ROLES.User);
   return (
     <>
@@ -38,22 +39,25 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="/home" element={<Home />} />
+
             <Route path="/testlogin" element={<TestLogin />} />
+
+            {/* {cookies["access_token"] === undefined ? ( */}
+            {/* <Route path="/login" element={<Login />} /> */}
+            {/* ) : (
+              <Route path="/home" element={<Home />} />
+            )} */}
           </Route>
-          <Route path="/login" element={<Login />} />
+
+          <Route element={<PreventLogin allowedRole={ROLES.User} />}>
+            <Route path="/login" element={<Login />} />
+          </Route>
           <Route element={<RequireAuth allowedRole={ROLES.User} />}>
             <Route path="/home" element={<Home />} />
             <Route path="/linkpage" element={<LinkPage />} />
             <Route path="/testlogin" element={<TestLogin />} />
             <Route path="/userdashboard" element={<UserDashboard />} />
           </Route>
-          {/*
-          <Route element={<RequireAuth allowedRole={ROLES.Admin} />}>
-            <Route path="/admin" element={<Admin />} />
-          </Route>
-          <Route element={<RequireAuth allowedRole={ROLES.Moderator} />}>
-            <Route path="/moderator" element={<Moderator />} />
-          </Route> */}
         </Routes>
       </GlobalContext.Provider>
     </>

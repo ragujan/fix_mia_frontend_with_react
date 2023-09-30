@@ -8,6 +8,7 @@ import { GlobalContext } from "../../context/GlobalContext";
 // import useAuth from "../../hooks/useAuth";
 import AuthContext from "../../context/AuthContext";
 import { useCookies } from "react-cookie";
+import useUserLoggedIn from "../../hooks/useUserLoggedIn";
 
 function Login() {
   const title = "Login";
@@ -20,7 +21,6 @@ function Login() {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/linkpage";
 
-  // const google_client_id = process.env.GOOGLE_CLIENT_ID;
   const [email, setEmail] = useState("rag@gmail.com");
   const [password, setPassword] = useState("ragbag###1111RRR");
   const [inputErrorState, setInputErrorState] = useState(false);
@@ -31,18 +31,24 @@ function Login() {
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
   const loginurl = "loginuser";
+  const isUserLoggedIn = useUserLoggedIn();
 
   const showPassword = () => {
     setPasswordVisible(!passwordVisible);
   };
   useEffect(() => {
     // This code will run every time auth changes
-    console.log("Auth updated:", auth);
-    if (auth.role === 10001) {
-      console.log("auth role is changed to not zero ");
-      navigate(from, { replace: true });
+
+    if (cookies["user_type"]) {
+      console.log("is user logged in");
+      console.log("is user logged in");
+      console.log("is user logged in");
+      console.log("is user logged in");
+      // navigate(from, { replace: true });
+      return;
     }
-  }, [auth, from, navigate]);
+ 
+  }, [auth, cookies, from, isUserLoggedIn, navigate]);
   const doLogin = async () => {
     const formData = new FormData();
     formData.append("email", email);
@@ -192,7 +198,10 @@ function Login() {
               Login
             </button>
             <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
-              <GoogleLoginButton setInputErrorState={setInputErrorState} setErrorMessage={setErrorMessage}/>
+              <GoogleLoginButton
+                setInputErrorState={setInputErrorState}
+                setErrorMessage={setErrorMessage}
+              />
             </div>
             {/* <div className="flex justify-center w-full pt-3 pb-2 my-1 ">
 

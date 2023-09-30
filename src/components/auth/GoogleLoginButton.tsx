@@ -10,6 +10,7 @@ import { GlobalContext } from "../../context/GlobalContext";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import useUserLoggedIn from "../../hooks/useUserLoggedIn";
 
 interface Props {
   setInputErrorState: React.Dispatch<SetStateAction<boolean>>;
@@ -21,11 +22,13 @@ function GoogleLoginButton(props: Props) {
   const [googleId, setGoogleId] = useState("");
   const devProdOptions = useContext(GlobalContext);
   const apiUrl = devProdOptions.apiUrl;
+  const isUserLoggedIn = useUserLoggedIn();
 
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/linkpage";
-  const [cookies, setCookies] = useCookies();
+  const [, setCookies] = useCookies();
+
   useEffect(() => {
     const requestGoogleId: () => Promise<string> = async () => {
       const url = `${apiUrl}googleapi`;
@@ -37,19 +40,14 @@ function GoogleLoginButton(props: Props) {
         return "";
       }
     };
-    if (
-      cookies["user_type"] === undefined &&
-      cookies["access_token"] === undefined
-    ) {
-      alert("bro")
+    if (!isUserLoggedIn) {
       requestGoogleId();
     }
     // Call the function directly when the component mounts
-  }, [apiUrl, cookies, googleId]);
+  }, [apiUrl, isUserLoggedIn]);
 
   useEffect(() => {
-    if (googleId !== ""  ) {
-      console.log("google client id is not empty ", googleId);
+    if (!isUserLoggedIn && googleId !== "") {
       const start = () => {
         gapi.client.init({
           clientId: googleId,
@@ -58,7 +56,7 @@ function GoogleLoginButton(props: Props) {
       };
       gapi.load("client:auth2", start);
     }
-  }, [googleId]);
+  }, [googleId, isUserLoggedIn]);
 
   const onSuccess = async (
     res: GoogleLoginResponse | GoogleLoginResponseOffline
@@ -90,8 +88,8 @@ function GoogleLoginButton(props: Props) {
         const refresh_token = json[0]["refresh_token"];
         const user = json[0]["email"];
         const user_type = json[0]["user-type"];
-        setCookies("access-token", access_token);
-        setCookies("refresh-token", refresh_token);
+        setCookies("access_token", access_token);
+        setCookies("refresh_token", refresh_token);
         setCookies("user_type", user_type);
         setCookies("user", user);
 

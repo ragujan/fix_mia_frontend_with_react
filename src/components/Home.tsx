@@ -20,10 +20,12 @@ function Home() {
   }, [isLoggedIn]);
 
   const sendPrivateRequest = async () => {
-    const endpointPath = "testpage2";
+    const endpointPath = "validatetoken";
     const url = `${devProdOptions.apiUrl}${endpointPath}`;
     const formData = new FormData();
-    formData.append("bro", "bro bro");
+    formData.append("access_token", cookies["access_token"]);
+    formData.append("refresh_token", cookies["refresh_token"]);
+    console.log(formData)
     try {
       const respone = await privateResponseSender(
         "POST",
