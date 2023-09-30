@@ -7,16 +7,17 @@ import { Link } from "react-router-dom";
 import useUserLoggedIn from "../hooks/useUserLoggedIn";
 
 import { useEffect } from "react";
+import LogoutButton from "./auth/LogoutButton";
 
 function Home() {
-  const [cookies, setCookies] = useCookies();
+  const [cookies,] = useCookies();
   const refresh = useRefreshToken();
   const devProdOptions = useContext(GlobalContext);
   const privateResponseSender = usePrivateRequestSender();
   const isLoggedIn = useUserLoggedIn();
 
   useEffect(() => {
-    console.log("user logged in",isLoggedIn);
+    console.log("user logged in", isLoggedIn);
   }, [isLoggedIn]);
 
   const sendPrivateRequest = async () => {
@@ -25,7 +26,7 @@ function Home() {
     const formData = new FormData();
     formData.append("access_token", cookies["access_token"]);
     formData.append("refresh_token", cookies["refresh_token"]);
-    console.log(formData)
+    console.log(formData);
     try {
       const respone = await privateResponseSender(
         "POST",
@@ -39,12 +40,7 @@ function Home() {
       console.log("you must login now ");
     }
   };
-  const removeCookies = () => {
-    setCookies("access_token", "");
-    setCookies("refresh_token", "");
-    setCookies("user_type", "");
-    setCookies("user", "");
-  };
+
 
   return (
     <div>
@@ -66,13 +62,7 @@ function Home() {
       <Link to="/login">Login</Link>
       <br />
       <br />
-      <button
-        onClick={() => {
-          removeCookies();
-        }}
-      >
-        Remove Cookies
-      </button>
+      <LogoutButton />
 
       <h1>Is user logged {JSON.stringify(isLoggedIn)}</h1>
     </div>
