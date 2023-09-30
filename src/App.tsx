@@ -14,7 +14,7 @@ import Unauthorized from "./components/Unauthorized";
 import LinkPage from "./components/LinkPage";
 import UserDashboard from "./components/UserDashboard";
 import TestLogin from "./components/TestLogin";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 import PreventLogin from "./components/PreventLogin";
 
 interface ROLESTYPE {
@@ -29,7 +29,7 @@ const ROLES: ROLESTYPE = {
 };
 function App() {
   const [apiUrl] = useState(getApiUrlPath());
-  const [cookies, setCookies] = useCookies();
+  // const [cookies, setCookies] = useCookies();
   // alert(ROLES.User);
   return (
     <>
@@ -49,7 +49,7 @@ function App() {
             )} */}
           </Route>
 
-          <Route element={<PreventLogin allowedRole={ROLES.User} />}>
+          <Route element={<PreventLogin  />}>
             <Route path="/login" element={<Login />} />
           </Route>
           <Route element={<RequireAuth allowedRole={ROLES.User} />}>

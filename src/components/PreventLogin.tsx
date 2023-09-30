@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { useCookies } from "react-cookie";
 import { useEffect, useState } from "react";
+import useUserLoggedIn from "../hooks/useUserLoggedIn";
 
 function PreventLogin(props: { allowedRole: number }) {
   const { allowedRole } = props;
@@ -9,6 +10,7 @@ function PreventLogin(props: { allowedRole: number }) {
   const [cookies] = useCookies();
   const [isUserTypeExists, setIsUserTypeExists] = useState(false);
   const [isTokenExists, setIsTokenExists] = useState(false);
+  const isUserLoggedIn = useUserLoggedIn();
 
   useEffect(() => {
     console.log("prevent login is built")
@@ -38,13 +40,14 @@ function PreventLogin(props: { allowedRole: number }) {
     if (!isUserTypeExists || !isTokenExists) {
       console.log("action must happen");
     }
-  }, [cookies, isUserTypeExists, isTokenExists]);
+    console.log('is user logged in hook ',isUserLoggedIn())
+  }, [cookies, isUserTypeExists, isTokenExists,isUserLoggedIn]);
 
 
   return !isTokenExists ? (
     <Outlet />
   ) :  (
-    <Navigate to={"/linkpage"} state={{ from: location }} replace />
+    <Navigate to={"/home"} state={{ from: location }} replace />
   );
 }
 
