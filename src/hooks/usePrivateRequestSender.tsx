@@ -12,6 +12,7 @@ const usePrivateRequestSender =  () => {
 
   ) => {
     console.log("refresh hook is being called ")
+    console.log("the url is ",url)
     const refreshTokenStatus = await refresh();
     if (refreshTokenStatus !== undefined) {
       const response = await makeRequests(

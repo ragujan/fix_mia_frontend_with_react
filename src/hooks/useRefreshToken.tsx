@@ -15,7 +15,7 @@ function useRefreshToken() {
       cookies["refresh_token"] !== undefined
     ) {
       // alert("calling refresh");
-      const rfToken = cookies["refresh-token"];
+      const rfToken = cookies["refresh_token"];
       const formData = new FormData();
       const endpointPath = "refresh-token";
       formData.append("refresh-token", rfToken);
@@ -24,6 +24,8 @@ function useRefreshToken() {
         const response = await makeRequests("POST", url, formData, "json", "");
         if (typeof response === "object" && response !== null) {
           const json = JSON.parse(JSON.stringify(response));
+          console.log('refresh token controller response is ' )
+          console.log(json[0])
           if (json[0]["status"] === "success") {
             const newAccessToken = json[0]["access_token"];
             console.log("new acess token created", newAccessToken);

@@ -33,22 +33,24 @@ function RequireAuth(props: { allowedRole: number }) {
     };
     checkTokenExists();
     checkUserExists();
-    console.log("user type exists ", isUserTypeExists);
-    console.log("token exists ", isTokenExists);
+
     if (!isUserTypeExists || !isTokenExists) {
-      console.log("action must happen")
+      console.log("action must happen");
     }
-    // console.log("hey");
-    // console.log(cookies["user_type"]);
   }, [cookies, isUserTypeExists, isTokenExists]);
 
-  return cookies["user_type"] === allowedRole ? (
-    <Outlet />
-  ) : (!isUserTypeExists || !isTokenExists) ? (
-    <Navigate to={"/login"} state={{ from: location }} replace />
-  ) : (
-    <Navigate to={"/unauthorized"} state={{ from: location }} replace />
-  );
+  if (cookies["user_type"] === allowedRole) {
+    return <Outlet />;
+  } else {
+    return <Navigate to={"/login"} state={{ from: location }} replace />;
+  }
+  // return cookies["user_type"] === allowedRole ? (
+  //   <Outlet />
+  // ) : !isUserTypeExists || !isTokenExists ? (
+  //   <Navigate to={"/login"} state={{ from: location }} replace />
+  // ) : (
+  //   <Navigate to={"/unauthorized"} state={{ from: location }} replace />
+  // );
 }
 
 export default RequireAuth;
