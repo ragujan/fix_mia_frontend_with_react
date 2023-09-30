@@ -43,6 +43,7 @@ function RequireAuth(props: { allowedRole: number }) {
     return <Outlet />;
   } else {
     return <Navigate to={"/login"} state={{ from: location }} replace />;
+    // return <Navigate to={"/unauthorized"} state={{ from: location }} replace />;
   }
   // return cookies["user_type"] === allowedRole ? (
   //   <Outlet />
