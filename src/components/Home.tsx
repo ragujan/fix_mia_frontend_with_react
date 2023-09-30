@@ -4,12 +4,20 @@ import usePrivateRequestSender from "../hooks/usePrivateRequestSender";
 import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Link } from "react-router-dom";
+import useUserLoggedIn from "../hooks/useUserLoggedIn";
+
+import { useEffect } from "react";
 
 function Home() {
   const [cookies, setCookies] = useCookies();
   const refresh = useRefreshToken();
   const devProdOptions = useContext(GlobalContext);
   const privateResponseSender = usePrivateRequestSender();
+  const isLoggedIn = useUserLoggedIn();
+
+  useEffect(() => {
+    console.log("user logged in",isLoggedIn);
+  }, [isLoggedIn]);
 
   const sendPrivateRequest = async () => {
     const endpointPath = "testpage2";
@@ -63,6 +71,8 @@ function Home() {
       >
         Remove Cookies
       </button>
+
+      <h1>Is user logged {JSON.stringify(isLoggedIn)}</h1>
     </div>
   );
 }

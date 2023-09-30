@@ -37,18 +37,18 @@ function GoogleLoginButton(props: Props) {
         return "";
       }
     };
-    // if (
-    //   cookies["user_type"] === undefined &&
-    //   cookies["access_token"] === undefined
-    // ) {
+    if (
+      cookies["user_type"] === undefined &&
+      cookies["access_token"] === undefined
+    ) {
       alert("bro")
       requestGoogleId();
-    // }
+    }
     // Call the function directly when the component mounts
-  }, [apiUrl, googleId]);
+  }, [apiUrl, cookies, googleId]);
 
   useEffect(() => {
-    if (googleId !== "") {
+    if (googleId !== ""  ) {
       console.log("google client id is not empty ", googleId);
       const start = () => {
         gapi.client.init({
