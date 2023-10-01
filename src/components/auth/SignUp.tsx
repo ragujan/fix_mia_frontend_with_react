@@ -38,7 +38,7 @@ function SignUp() {
     formData.append("password", password);
     formData.append("confirmPassword", confirmPassword);
 
-    if (!validate(username, "username")) {
+    if (!validate(username, "name")) {
       setErrorMessage("Invalid username only numbers and texts are allowed");
       setInputErrorState(true);
       return;

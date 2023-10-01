@@ -99,18 +99,7 @@ function Login() {
         setCookies("refresh_token", refresh_token);
         setCookies("user_type", user_type);
         setCookies("user", user);
-
-        // const authObject = {
-        //   user: user,
-        //   role: 10001,
-        //   token: access_token,
-        //   refreshToken: refresh_token,
-        //   userType: user_type,
-        // };
-        // setAuth(authObject);
-
         setErrorMessage("");
-        // alert("auth roles are"+ " "+auth.roles);
         console.log(auth);
 
         console.log("old saved token ", cookies["access_token"]);
@@ -128,7 +117,7 @@ function Login() {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center pt-10 bg-grey-lighter">
+      <div className="flex flex-col items-center justify-center pt-10 ">
         <div className="container flex flex-col items-center justify-center flex-1 max-w-md px-2 mx-auto">
           <div className="w-full px-6 py-8 text-black bg-white rounded shadow-md">
             <div className="flex justify-center w-full ">

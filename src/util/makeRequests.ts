@@ -13,7 +13,7 @@ async function makeRequests(
     }
     const requestHeaders: HeadersInit = new Headers();
     requestHeaders.set('Content-Type', contentType);
-    requestHeaders.set('Accept', responseType === 'json' ? 'application/json' : (responseType === 'text' ? 'text/plain' : 'text/html'))
+    // requestHeaders.set('Accept', responseType === 'json' ? 'application/json' : (responseType === 'text' ? 'text/plain' : 'text/html'))
     try {
         const requestOptions: requestOptionsType = {
             method,
