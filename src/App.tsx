@@ -7,15 +7,17 @@ import { GlobalContext } from "./context/GlobalContext";
 import getApiUrlPath from "./util/getApiUrlPath";
 import { useState } from "react";
 import Layout from "./components/Layout";
-import RequireAuth from "./components/RequireAuth";
+import RequireAuth from "./components/auth/RequireAuth";
 import Home from "./components/Home";
-import Unauthorized from "./components/Unauthorized";
+import Unauthorized from "./components/auth/Unauthorized";
 
 import LinkPage from "./components/LinkPage";
 import UserDashboard from "./components/UserDashboard";
 import TestLogin from "./components/TestLogin";
 // import { useCookies } from "react-cookie";
-import PreventLogin from "./components/PreventLogin";
+import PreventLogin from "./components/auth/PreventLogin";
+import SellerRegister from "./components/seller/SellerRegister";
+import HomeTest from "./components/HomeTest";
 
 interface ROLESTYPE {
   User: number;
@@ -39,6 +41,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/hometest" element={<HomeTest />} />
 
             <Route path="/testlogin" element={<TestLogin />} />
 
@@ -49,7 +52,7 @@ function App() {
             )} */}
           </Route>
 
-          <Route element={<PreventLogin  />}>
+          <Route element={<PreventLogin />}>
             <Route path="/login" element={<Login />} />
           </Route>
           <Route element={<RequireAuth allowedRole={ROLES.User} />}>
@@ -57,6 +60,9 @@ function App() {
             <Route path="/linkpage" element={<LinkPage />} />
             <Route path="/testlogin" element={<TestLogin />} />
             <Route path="/userdashboard" element={<UserDashboard />} />
+            <Route path="/seller">
+              <Route path="/seller/register-seller" element={<SellerRegister />} />
+            </Route>
           </Route>
         </Routes>
       </GlobalContext.Provider>

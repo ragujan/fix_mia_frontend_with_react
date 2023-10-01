@@ -2,10 +2,10 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { useCookies } from "react-cookie";
 import { useEffect, useState } from "react";
-import useUserLoggedIn from "../hooks/useUserLoggedIn";
+import useUserLoggedIn from "../../hooks/useUserLoggedIn";
 
-function PreventLogin(props: { allowedRole: number }) {
-  const { allowedRole } = props;
+function PreventLogin() {
+ 
   const location = useLocation();
   const [cookies] = useCookies();
   const [isUserTypeExists, setIsUserTypeExists] = useState(false);

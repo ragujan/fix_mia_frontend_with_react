@@ -6,7 +6,7 @@ const validate = (input: string, validationType: string) => {
     }
 
     switch (validationType) {
-        case 'username': {
+        case 'name': {
             const textRegex = /^[a-zA-Z0-9]+$/;
             return textRegex.test(value);
         }
@@ -18,7 +18,11 @@ const validate = (input: string, validationType: string) => {
             const passwordRegex = /^(?=.*\d)(?=.*[A-Z])(?=.*[^a-zA-Z\d]).{7,}$/;
             return passwordRegex.test(value);
         }
+        case 'price': {
+            const priceRegex = /^\d+(?:\.\d{1,2})?$/;
+            return priceRegex.test(value);
 
+        }
         case 'number': {
             return !isNaN(Number(value));
         }
